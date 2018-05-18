@@ -132,7 +132,7 @@ int main(void)
 		}
 	}
 
-	printf("%d", bt.get(c, d));
+	cout << ((bt.get(c, d) >= 0) ? bt.get(c, d) : -1) << endl;
 	system("pause");
 	return 0;
 }
