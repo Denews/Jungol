@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdio>
 #include <cstring>
 #include <queue>
 
@@ -30,8 +31,8 @@ bucket::bucket(int ma, int mb):
 	A = new int[MB * 2 + 2];
 	B = new int[MA * 2 + 2];
 
-	memset(A, 0xff, MB * 2 + 2);
-	memset(B, 0xff, MA * 2 + 2);
+	memset(A, 0, MB * 2 + 2);
+	memset(B, 0, MA * 2 + 2);
 }
 
 int bucket::get(int a, int b)
@@ -79,11 +80,11 @@ void bucket::set(int a, int b, int n)
 int main(void)
 {
 	int a, b, c, d;
-	cin >> a >> b >> c >> d;
+	scanf("%d %d %d %d", &a, &b, &c, &d);
 
 	bucket bt(a, b);
 	
-	bt.set(0, 0, 0);
+	bt.set(0, 0, 1);
 
 	queue<bstate> lq;
 	lq.push({ 0, 0 });
@@ -94,37 +95,37 @@ int main(void)
 		lq.pop();
 
 		int t = bt.get(bs.a, bs.b);
-		if (t < 0) continue;
+		if (t < 1) continue;
 
-		if (bs.a < a && (bt.get(a, bs.b) < 0 || bt.get(a, bs.b) > t + 1))
+		if (bs.a < a && (bt.get(a, bs.b) < 1 || bt.get(a, bs.b) > t + 1))
 		{
 			bt.set(a, bs.b, t + 1);
 			lq.push({ a, bs.b });
 		}
-		if (bs.a > 0 && (bt.get(0, bs.b) < 0 || bt.get(0, bs.b) > t + 1))
+		if (bs.a > 0 && (bt.get(0, bs.b) < 1 || bt.get(0, bs.b) > t + 1))
 		{
 			bt.set(0, bs.b, t + 1);
 			lq.push({ 0, bs.b });
 		}
-		if (bs.b < b && (bt.get(bs.a, b) < 0 || bt.get(bs.a, b) > t + 1))
+		if (bs.b < b && (bt.get(bs.a, b) < 1 || bt.get(bs.a, b) > t + 1))
 		{
 			bt.set(bs.a, b, t + 1);
 			lq.push({ bs.a, b });
 		}
-		if (bs.b > 0 && (bt.get(bs.a, 0) < 0 || bt.get(bs.a, 0) > t + 1))
+		if (bs.b > 0 && (bt.get(bs.a, 0) < 1 || bt.get(bs.a, 0) > t + 1))
 		{
 			bt.set(bs.a, 0, t + 1);
 			lq.push({ bs.a, 0 });
 		}
 		if (bs.a > 0 && bs.b < b &&
-			(bt.get(max(0, (bs.b + bs.a) - b), min(b, bs.a + bs.b)) < 0 
+			(bt.get(max(0, (bs.b + bs.a) - b), min(b, bs.a + bs.b)) < 1 
 			|| bt.get(max(0, (bs.b + bs.a) - b), min(b, bs.a + bs.b)) > t + 1))
 		{
 			bt.set(max(0, (bs.b + bs.a) - b), min(b, bs.a + bs.b), t + 1);
 			lq.push({ max(0, (bs.b + bs.a) - b), min(b, bs.a + bs.b) });
 		}
 		if (bs.b > 0 && bs.a < a &&
-			(bt.get(min(a, bs.a + bs.b), max(0, (bs.b + bs.a) - a)) < 0
+			(bt.get(min(a, bs.a + bs.b), max(0, (bs.b + bs.a) - a)) < 1
 			|| bt.get(min(a, bs.a + bs.b), max(0, (bs.b + bs.a) - a)) > t + 1))
 		{
 			bt.set(min(a, bs.a + bs.b), max(0, (bs.b + bs.a) - a), t + 1);
@@ -132,7 +133,7 @@ int main(void)
 		}
 	}
 
-	cout << ((bt.get(c, d) >= 0) ? bt.get(c, d) : -1) << endl;
+	printf("%d\n", ((bt.get(c, d) >= 1) ? bt.get(c, d) - 1 : -1));
 	system("pause");
 	return 0;
 }
